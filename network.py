@@ -35,7 +35,7 @@ class network:
             to_return = self.m_in(corrupted)
             if not to_return == False: return to_return, iter
             if self.mode == "projection":
-                if (np.abs(np.abs(prev - corrupted)) < 0.0001).all(): return None, iter
+                    if (np.abs(np.abs(prev - corrupted)) < 0.0001).all(): return None, iter
             if self.mode == "easy":
                 if (diff - np.sum(np.abs(prev - corrupted)) < 0.001): return None, iter
             prev = corrupted
