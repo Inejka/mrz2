@@ -1,3 +1,16 @@
+"""
+////////////////////////////////////////////////////////////////////////////////////
+// Лабораторная работа 4 по дисциплине МРЗвИС
+// Выполнена студентом группы 9217023
+// БГУИР Павлов Даниил Иванович
+// Вариант 2 - модель сети Хопфилда с непрерывным состоянием и
+// дискретным временем в асинхронном режиме
+// 10.11.2021
+// Использованные материалы:
+// https://numpy.org/doc/stable/index.html - методические материалы по numpy
+// https://www.learnpython.org/ - методические материалы по python
+// https://intuit.ru/studies/courses/61/61/lecture/20452?page=3 - описание сети
+"""
 import numpy as np
 
 
@@ -32,18 +45,20 @@ class network:
             corrupted = corrupted.flatten()
             # print(self.images[corr] - corrupted)
             # print((np.abs(self.images[corr] - corrupted) > 0.9).all())
-            to_return = self.m_in(corrupted)
-            if not to_return == False: return to_return, iter
+            # to_return = self.m_in(corrupted)
+            # if not to_return == False: return to_return, iter
             if self.mode == "projection":
-                    if (np.abs(np.abs(prev - corrupted)) < 0.0001).all(): return None, iter
+                if (np.abs(np.abs(prev - corrupted)) < 0.001).all(): return self.m_in(corrupted), iter
             if self.mode == "easy":
                 if (diff - np.sum(np.abs(prev - corrupted)) < 0.001): return None, iter
             prev = corrupted
 
     def m_in(self, image):
         if self.mode == "projection":
+            image = np.where(image > 0, 1, -1)
             for i in range(self.images.shape[0]):
-                if (np.abs(self.images[i] - image) > 0.9).all() and (np.abs(self.images[i] - image) < 1).all():
+                if (self.images[i] == image).all():
+                # if (np.abs(self.images[i] - image) > 0.9).all() and (np.abs(self.images[i] - image) < 1).all():
                     return i
             return False
         if self.mode == "easy":
